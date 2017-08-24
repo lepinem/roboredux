@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  {{>_head}}
+  <body>
+    <div class="container">
+      {{#robots}}
+        {{>_robotCard}}
+      {{/robots}}
+      {{^robots}}
+         <p>sorry no robots</p>
+      {{/robots}}
+    </div>
+  </body>
+</html>
