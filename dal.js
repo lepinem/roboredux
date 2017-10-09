@@ -1,73 +1,55 @@
 //dal.js
 
-const MongoClient = require('mongodb').MongoClient
+const mongoose = require('mongoose')
+const Robot = require('./model/Robot')
+mongoose.Promise = require('bluebird')
 const url = 'mongodb://localhost:27017/robodb'
-let robots = []
+mongoose.connect(url, {
+  useMongoClient: true
+})
 
-function getAllDocs (err, db) {
-  const collection = db.collection('robots')
-  // console.log(err)
-  const documents = []
-  collection.find({}).toArray(function (err, docs) {
-    robots = docs
-    // console.log(robots);
-    // db.close()
+function getAllRobots() {
+  return Robot.find()
+}
+
+function addNewRobot(newRobot){
+  const robot = new Robot(newRobot)
+  robot.save(function(err){
+    console.log(err)
+  })
+  return Promise.resolve('success')
+}
+
+function getRobotById(robotId) {
+  return Robot.findOne({'_id': robotId}) .catch(function(err){
+    console.log(err)
   })
 }
 
-function getAllRobots () {
-  return newPromise((resolve, reject) => {
-    const collection = db.collection('robots')
-    MongoClient.connect(url, function (err, db) {
-      // console.log(db)
-      collection.find({}).toArray(function (err, docs) {
-        // console.log(docs)
-        resolve(docs)
-        reject(err)
-      })
-    })
+function editRobot(robotId, updatedRobot) {
+  Robot.update({'_id': robotId,}, updatedRobot, {upsert: true}, function(err, doc) {
+    console.log(doc, 'from editRobot dal method')
   })
 }
 
-function getUnemployed(){
-  let unemployedRobots = []
-    for (var i=0; i<robots.length; i++) {
-      if (robots[i].job == null){
-        unemployedRobots.push(robots[i])
-      }
-    }
-    return unemployedRobots
+function deleteRobot (robotId) {
+  Robot.deleteOne({'_id': robotId})
+  .catch(function(err){
+    console.log(err)
+  })
 }
 
+// function checkLogin()
 
-// Use connect method to connect to the server
+module.exports = {
+  getAllRobots,
+  addNewRobot,
+  getRobotById,
+  editRobot,
+  deleteRobot,
+  // checkLogin
 
-function connectMongodb (url, cb) {
-  MongoClient.connect(url, cb)
 }
-
-function getRobots() {
-  connectMongodb(url, getAllDocs)
-  // console.log(robots);
-  return robots
-}
-
-function getRobot(robotId) {
-  let selectRobot = []
-  for (var i=0; i<robots.length; i++) {
-    if (robots[i].id == robotId) {
-      selectRobot = robots[i];
-    }
-  }
-  console.log(selectRobot);
-}
-
-
-module.exports = { getRobots, getAllRobots, getUnemployed, getRobot
-
-
-
- }
 
 
 

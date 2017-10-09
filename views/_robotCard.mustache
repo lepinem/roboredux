@@ -1,6 +1,9 @@
 <!-- //_robotCard.mustache -->
 
 <article class="userCard">
+<div class="card">
+
+
   <div class="cardHead">
     <div class="avatar">
       <img class="pic" src="{{avatar}}" alt="{{name}}">
@@ -12,9 +15,9 @@
     </div>
   </div>
   <div class="hireFor">
-    <section class="schools">
+    <div class="schools">
       <p> Education: {{university}} </p>
-    </section>
+    </div>
     <div class="rSkills">
       <p> Skills: </p>
       <ul>
@@ -22,4 +25,6 @@
       </ul>
     </div>
   </div>
+  <a href="http://localhost:3000/robots/edit/{{_id}}"><button type="button" name="button">Edit</button></a>
+</div>
 </article>
